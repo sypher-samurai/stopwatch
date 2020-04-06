@@ -1,12 +1,14 @@
-function Stopwatch() {
+function Stopwatch(elem) {
   var time = 0;
   var interval;
   var offset;
 
   function update() {
-    time += delta();
+    if(this.isOn){
+      time += delta();
+    }
     var formattedTime = timeFormatter(time);
-    console.log(formattedTime);
+    elem.textContent = formattedTime;
   }
   function delta() {
     var now = Date.now();
@@ -37,7 +39,7 @@ function Stopwatch() {
   this.isOn = false;
   this.start = function () {
     if (!this.isOn) {
-      interval = setInterval(update, 10);
+      interval = setInterval(update.bind(this), 10);
       offset = Date.now();
       this.isOn = true;
     }
@@ -50,6 +52,9 @@ function Stopwatch() {
     }
   };
   this.reset = function () {
-    time = 0;
+if(!this.isOn){
+  time = 0;
+  update();
+}
   };
 }
